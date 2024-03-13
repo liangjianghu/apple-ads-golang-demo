@@ -15,9 +15,9 @@ import (
 
 func main() {
 	// Define Apple Search Ads credentials and audience URL.
-	clientID := "SEARCHADS.appleads-dcff-437a-9513-liangjianghu"
-	teamID := "SEARCHADS.appleads-dcff-437a-9513-liangjianghu"
-	keyID := "appleads-6536-4d77-ade3-liangjianghu"
+	clientID := "SEARCHADS.APPLEADS-dcff-437a-9513-liangjianghu"
+	teamID := "SEARCHADS.APPLEADS-dcff-437a-9513-liangjianghu"
+	keyID := "APPLEADS-6536-4d77-ade3-liangjianghu"
 	audience := "https://appleid.apple.com"
 
 	// Calculate issuedAt and expiration timestamps.
@@ -111,5 +111,29 @@ func main() {
 	fmt.Println(">> The access_token is valid for 1 hour.")
 	fmt.Println(accessToken)
 
+	// Prepare the HTTP request for accessing the ACLs endpoint
+	req, err = http.NewRequest("GET", "https://api.searchads.apple.com/api/v4/acls", nil)
+	if err != nil {
+		panic(err)
+	}
 
+	// Add the Authorization header to the request
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+
+	// Initialize HTTP client and make the request
+	client = &http.Client{}
+	resp, err = client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	// Read and display the response body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(">> Response from ACLs endpoint:")
+	fmt.Println(string(body))
 }
